@@ -28,6 +28,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+((ATTACH + KILL + DELETE > 1)) && {
+    echo "Only use one of --attach, --kill, --delete" >&2
+    exit 1
+}
+
 selection=$(zellij list-sessions \
     | sed 's/ \[.*$//' \
     | fzf --preview-window hidden)
