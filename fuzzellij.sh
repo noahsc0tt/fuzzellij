@@ -1,24 +1,32 @@
 #!/usr/bin/env bash
 
-LIST=0
 ATTACH=0
 KILL=0
 DELETE=0
 
+function show_help() {
+    echo "Usage: $0 [OPTIONS]"
+    echo
+    echo "If no options are provided, the selected session name will be written to stdout."
+    echo
+    echo "Options:"
+    echo "  -l, --list        List all sessions"
+    echo "  -a, --attach      Attach to a session"
+    echo "  -k, --kill        Kill a session"
+    echo "  -d, --delete      Delete a session"
+    echo "  -h, --help        Show this help message"
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        -l|--list) LIST=1; shift;;
+        -h|--help) show_help; exit 0;;
+        -l|--list) zellij list-sessions; exit 0;;
         -a|--attach) ATTACH=1; shift;;
         -k|--kill) KILL=1; shift;;
         -d|--delete) DELETE=1; shift;;
         *) echo "unknown option: $1"; exit 1;;
     esac
 done
-
-if [[ $LIST -eq 1 ]]; then
-    zellij list-sessions
-    exit
-fi
 
 selection=$(zellij list-sessions \
     | sed 's/ \[.*$//' \
